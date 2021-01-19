@@ -8,7 +8,15 @@ const Users = new UsersModel()
 
 loginRouter.post('/', async (request, response) => {
 
-    const user = await Users.get({ username: request.body.username })
+    let user
+
+    if (request.body.username) {
+        user = await Users.get({ username: request.body.username })
+    } else if (request.body.email) {
+        user = await Users.get({ email: request.body.email })
+    } else {
+        user = null
+    }
 
     if (user) {
         try {

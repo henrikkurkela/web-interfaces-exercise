@@ -29,7 +29,7 @@ signupRouter.post('/', async (request, response) => {
         }
     }
 
-    response.status(500).end()
+    response.status(500).send('Internal server error.')
 })
 
 module.exports = signupRouter

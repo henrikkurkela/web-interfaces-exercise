@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('./database');
 
-const User = sequelize.define('User',
+const User = sequelize.define('user',
     {
         id: {
             type: DataTypes.INTEGER,
@@ -22,12 +22,8 @@ const User = sequelize.define('User',
             type: DataTypes.STRING,
             allowNull: false
         }
-    }, {
-    indexes: [
-        { unique: true, fields: ['email'] },
-        { unique: true, fields: ['username'] }
-    ]
-})
+    }
+)
 
 class UsersModel {
 
@@ -53,3 +49,5 @@ class UsersModel {
 }
 
 module.exports = UsersModel
+
+module.exports.User = User

@@ -1,0 +1,38 @@
+POST http://localhost:3001/api/postings
+Authorization: Bearer <<<token here>>>
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="title"
+
+Tasty Kebab
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="description"
+
+Selling a tasty doner kebab. Not hungry anymore.
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="category"
+
+kebab
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="location"
+
+Oulu
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="price"
+
+123.43
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="shipping"
+
+true
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="pickup"
+
+true
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="images"; filename="asd.json"
+Content-Type: application/json
+
+< ./login.rest
+------WebKitFormBoundary7MA4YWxkTrZu0gW-- 

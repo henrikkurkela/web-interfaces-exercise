@@ -26,6 +26,8 @@ postingsRouter.post('/', auth(true), upload.any(), async (request, response) => 
         response.status(400).send('No price.')
     } else if (!request.body.shipping && !request.body.pickup) {
         response.status(400).send('No delivery method.')
+    } else if (request.files.length > 4) {
+        response.status(400).send('Too many images.')
     } else {
         try {
             const newPosting = await Postings.add({
@@ -39,11 +41,14 @@ postingsRouter.post('/', auth(true), upload.any(), async (request, response) => 
                 userId: request.auth.id
             })
 
-            await request.files.map((image) => {
-                Images.add({ image: `uploads/${image.filename}`, postingId: newPosting.get({ plain: true }).id })
-            })
+            const newImages = await Promise.all(
+                request.files.map(async (image) => {
+                    const newImage = await Images.add({ image: `/uploads/${image.filename}`, postingId: newPosting.get({ plain: true }).id })
+                    return newImage.get({ plain: true }).image
+                })
+            )
 
-            response.status(201).json(newPosting)
+            response.status(201).json({ ...newPosting.get({ plain: true }), images: newImages })
         } catch (error) {
             request.files.map((file) => {
                 fs.unlinkSync(file.path)
@@ -56,7 +61,14 @@ postingsRouter.post('/', auth(true), upload.any(), async (request, response) => 
 
 postingsRouter.get('/', async (request, response) => {
 
-    response.json(Postings.getAll())
+    const postings = await Postings.getAll()
+    const images = await Images.getAll()
+
+    const postingsWithImages = postings.map((posting) => {
+        return { ...posting.get({ plain: true }), images: images.filter((image) => image.postingId === posting.id).map((image) => image.image) }
+    })
+
+    response.json(postingsWithImages)
 })
 
 module.exports = postingsRouter

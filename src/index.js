@@ -10,10 +10,7 @@ const Posting = require('./models/posting').Posting
 const Image = require('./models/image').Image
 
 User.hasMany(Posting, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' })
-Posting.belongsTo(User)
-
 Posting.hasMany(Image, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' })
-Image.belongsTo(Posting)
 
 const signup = require('./controllers/signup')
 const login = require('./controllers/login')

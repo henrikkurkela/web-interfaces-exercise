@@ -12,6 +12,18 @@ const ImagesModel = require('../models/image')
 const Postings = new PostingsModel()
 const Images = new ImagesModel()
 
+postingsRouter.get('/', async (request, response) => {
+
+    const postings = await Postings.getAll()
+    const images = await Images.getAll()
+
+    const postingsWithImages = postings.map((posting) => {
+        return { ...posting.get({ plain: true }), images: images.filter((image) => image.postingId === posting.id).map((image) => image.image) }
+    })
+
+    response.json(postingsWithImages)
+})
+
 postingsRouter.post('/', auth(true), upload.any(), async (request, response) => {
 
     if (!request.body.title) {
@@ -59,16 +71,68 @@ postingsRouter.post('/', auth(true), upload.any(), async (request, response) => 
     }
 })
 
-postingsRouter.get('/', async (request, response) => {
+postingsRouter.patch('/:id', auth(true), upload.any(), async (request, response) => {
 
-    const postings = await Postings.getAll()
-    const images = await Images.getAll()
+    const id = request.params.id
+    const patch = request.body
 
-    const postingsWithImages = postings.map((posting) => {
-        return { ...posting.get({ plain: true }), images: images.filter((image) => image.postingId === posting.id).map((image) => image.image) }
-    })
+    let posting = await Postings.get({ id })
+    let images = await Images.getAll({ postingId: posting.id })
 
-    response.json(postingsWithImages)
+    if (request.auth.id !== posting.userId) {
+        response.status(401).send('Unauthorized.')
+    } else {
+        try {
+            await Postings.updateById({ ...patch, id, userId: request.auth.id })
+            posting = await Postings.get({ id })
+
+            if (request.files.length > 4) {
+                response.status(400).send('Too many images.')
+            } else {
+                images.map((image) => {
+                    Images.delete({ id: image.id })
+                    fs.unlinkSync(`.${image.image}`)
+                })
+
+                images = await Promise.all(
+                    request.files.map(async (image) => {
+                        const newImage = await Images.add({ image: `/uploads/${image.filename}`, postingId: posting.get({ plain: true }).id })
+                        return newImage.get({ plain: true }).image
+                    })
+                )
+            }
+
+            response.status(200).json({ ...posting.get({ plain: true }), images })
+        } catch (error) {
+            response.status(400).send(error.message)
+        }
+    }
+})
+
+postingsRouter.delete('/:id', auth(true), async (request, response) => {
+
+    const id = request.params.id
+
+    const posting = await Postings.get({ id })
+    const images = await Images.getAll({ postingId: posting.id })
+
+    if (request.auth.id !== posting.userId) {
+        response.status(401).send('Unauthorized.')
+    } else {
+        try {
+            images.map((image) => {
+                Images.delete({ id: image.id })
+                fs.unlinkSync(`.${image.image}`)
+            })
+
+            await Postings.delete({ id })
+
+            response.status(204).end()
+        } catch (error) {
+            response.status(400).send(error.message)
+        }
+    }
+
 })
 
 module.exports = postingsRouter

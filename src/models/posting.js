@@ -43,12 +43,16 @@ class PostingsModel {
         return Posting.findOne({ where: { ...posting } })
     }
 
-    getAll = () => {
-        return Posting.findAll()
+    getAll = (where = null) => {
+        return Posting.findAll({ where: { ...where } })
     }
 
     add = (posting) => {
         return Posting.create({ ...posting })
+    }
+
+    updateById = (posting) => {
+        return Posting.update({ ...posting }, { where: { id: posting.id } })
     }
 
     delete = (posting) => {

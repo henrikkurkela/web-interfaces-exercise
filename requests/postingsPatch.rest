@@ -1,4 +1,4 @@
-POST http://localhost:3001/api/postings
+PATCH http://localhost:3001/api/postings/1
 Authorization: Bearer <<<token here>>>
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
@@ -21,20 +21,15 @@ Oulu
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="price"
 
-123.43
+102030.43
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="shipping"
 
-true
+false
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="pickup"
 
 true
-------WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="images"; filename="asd.json"
-Content-Type: application/json
-
-< ./login.rest
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="images"; filename="asd.json"
 Content-Type: application/json

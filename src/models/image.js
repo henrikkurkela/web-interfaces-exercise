@@ -21,8 +21,8 @@ class ImagesModel {
         return Image.findOne({ where: { ...image } })
     }
 
-    getAll = () => {
-        return Image.findAll()
+    getAll = (where = null) => {
+        return Image.findAll({ where: { ...where } })
     }
 
     add = (image) => {

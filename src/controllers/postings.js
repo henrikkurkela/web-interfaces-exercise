@@ -24,6 +24,40 @@ postingsRouter.get('/', async (request, response) => {
     response.json(postingsWithImages)
 })
 
+postingsRouter.get('/:sortBy/:value', async (request, response) => {
+
+    const postings = await Postings.getAll()
+    const images = await Images.getAll()
+
+    const sortBy = request.params.sortBy
+    const value = request.params.value
+
+    const postingsWithImages = postings.map((posting) => {
+        return { ...posting.get({ plain: true }), images: images.filter((image) => image.postingId === posting.id).map((image) => image.image) }
+    })
+
+    switch (sortBy) {
+        case 'category':
+        case 'location':
+            response.json(postingsWithImages.filter((item) => RegExp(value, 'gi').test(item[`${sortBy}`])))
+            break
+        case 'date':
+            switch (value) {
+                case 'asc':
+                    response.json(postingsWithImages.sort((first, second) => new Date(first.updatedAt).getTime() - new Date(second.updatedAt).getTime()))
+                    break
+                case 'desc':
+                    response.json(postingsWithImages.sort((first, second) => new Date(second.updatedAt).getTime() - new Date(first.updatedAt).getTime()))
+                    break
+                default:
+                    response.status(400).send('Bad request.')
+            }
+            break
+        default:
+            response.status(400).send('Bad request.')
+    }
+})
+
 postingsRouter.post('/', auth(true), upload.any(), async (request, response) => {
 
     if (!request.body.title) {

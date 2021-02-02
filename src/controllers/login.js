@@ -30,7 +30,6 @@ loginRouter.post('/', async (request, response) => {
                 response.status(401).send('Incorrect credentials.')
             }
         } catch (error) {
-            console.log(error)
             response.status(500).send('Internal server error.')
         }
     } else {

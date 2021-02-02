@@ -112,6 +112,7 @@ postingsRouter.patch('/:id', auth(true), upload.any(), async (request, response)
 
     let posting = await Postings.get({ id })
     let images = await Images.getAll({ postingId: posting.id })
+    let imageFiles = images.map((image) => image.image)
 
     if (request.auth.id !== posting.userId) {
         response.status(401).send('Unauthorized.')
@@ -122,13 +123,13 @@ postingsRouter.patch('/:id', auth(true), upload.any(), async (request, response)
 
             if (request.files.length > 4) {
                 response.status(400).send('Too many images.')
-            } else {
+            } else if (request.files.length > 0) {
                 images.map((image) => {
                     Images.delete({ id: image.id })
                     fs.unlinkSync(`.${image.image}`)
                 })
 
-                images = await Promise.all(
+                imageFiles = await Promise.all(
                     request.files.map(async (image) => {
                         const newImage = await Images.add({ image: `/uploads/${image.filename}`, postingId: posting.get({ plain: true }).id })
                         return newImage.get({ plain: true }).image
@@ -136,7 +137,7 @@ postingsRouter.patch('/:id', auth(true), upload.any(), async (request, response)
                 )
             }
 
-            response.status(200).json({ ...posting.get({ plain: true }), images })
+            response.status(200).json({ ...posting.get({ plain: true }), images: imageFiles })
         } catch (error) {
             response.status(400).send(error.message)
         }

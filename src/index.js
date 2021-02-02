@@ -12,6 +12,8 @@ const Image = require('./models/image').Image
 User.hasMany(Posting, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' })
 Posting.hasMany(Image, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' })
 
+database.sync()
+
 const signup = require('./controllers/signup')
 const login = require('./controllers/login')
 const postings = require('./controllers/postings')
@@ -29,4 +31,4 @@ app.use('/api/uploads', express.static('uploads'))
 
 app.listen(process.env.PORT)
 
-database.sync({ force: true })
+module.exports = app

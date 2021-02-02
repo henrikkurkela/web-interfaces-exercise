@@ -24,7 +24,6 @@ signupRouter.post('/', async (request, response) => {
             delete newuser['password']
             response.status(201).json(newuser)
         } catch (error) {
-            console.log(error)
             response.status(400).send('User already exists.')
         }
     }

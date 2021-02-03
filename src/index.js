@@ -9,8 +9,10 @@ const User = require('./models/user').User
 const Posting = require('./models/posting').Posting
 const Image = require('./models/image').Image
 
-User.hasMany(Posting, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' })
-Posting.hasMany(Image, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' })
+User.hasMany(Posting, { foreignKey: { name: 'userId', allowNull: false }, onDelete: 'CASCADE' })
+Posting.belongsTo(User)
+Posting.hasMany(Image, { foreignKey: { name: 'postingId', allowNull: false }, onDelete: 'CASCADE' })
+Image.belongsTo(Posting)
 
 database.sync()
 

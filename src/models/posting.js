@@ -1,5 +1,8 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('./database');
+const { DataTypes } = require('sequelize')
+const sequelize = require('./database')
+
+const User = require('./user').User
+const Image = require('./image').Image
 
 const Posting = sequelize.define('posting',
     {
@@ -40,11 +43,11 @@ const Posting = sequelize.define('posting',
 class PostingsModel {
 
     get = (posting) => {
-        return Posting.findOne({ where: { ...posting } })
+        return Posting.findOne({ where: { ...posting }, include: [User, Image] })
     }
 
     getAll = (where = null) => {
-        return Posting.findAll({ where: { ...where } })
+        return Posting.findAll({ where: { ...where }, include: [User, Image] })
     }
 
     add = (posting) => {
@@ -52,7 +55,7 @@ class PostingsModel {
     }
 
     updateById = (posting) => {
-        return Posting.update({ ...posting }, { where: { id: posting.id } })
+        return Posting.update({ ...posting }, { where: { id: posting.id }, include: [User, Image] })
     }
 
     delete = (posting) => {

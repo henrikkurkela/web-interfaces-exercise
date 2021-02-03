@@ -1,5 +1,6 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('./database');
+const { DataTypes } = require('sequelize')
+const { afterBulkUpdate } = require('./database')
+const sequelize = require('./database')
 
 const Image = sequelize.define('image',
     {

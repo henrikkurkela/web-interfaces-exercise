@@ -49,9 +49,10 @@ describe('Postings', () => {
                     .field('price', '30')
                     .field('shipping', 'true')
                     .field('pickup', 'false')
+                    .attach('picture', './src/tests/test.jpg')
                     .end((error, response) => {
                         response.should.have.status(201)
-                        response.body.should.have.all.keys('id', 'title', 'description', 'category', 'location', 'price', 'shipping', 'pickup', 'images', 'userId', 'createdAt', 'updatedAt')
+                        response.body.should.have.all.keys('id', 'title', 'description', 'category', 'location', 'price', 'shipping', 'pickup', 'images', 'user', 'userId', 'createdAt', 'updatedAt')
                         postingId = response.body.id
                         done()
                     })
@@ -64,8 +65,7 @@ describe('Postings', () => {
             .end((error, response) => {
                 response.should.have.status(200)
                 response.body.should.be.a('array')
-                response.body[0].should.have.all.keys('id', 'title', 'description', 'category', 'location', 'price', 'shipping', 'pickup', 'images', 'userId', 'createdAt', 'updatedAt')
-                postingid = response.body[0].id
+                response.body[0].should.have.all.keys('id', 'title', 'description', 'category', 'location', 'price', 'shipping', 'pickup', 'images', 'user', 'userId', 'createdAt', 'updatedAt')
                 done()
             })
     })
@@ -78,7 +78,7 @@ describe('Postings', () => {
             .field('description', 'New Test Description')
             .end((error, response) => {
                 response.should.have.status(200)
-                response.body.should.have.all.keys('id', 'title', 'description', 'category', 'location', 'price', 'shipping', 'pickup', 'images', 'userId', 'createdAt', 'updatedAt')
+                response.body.should.have.all.keys('id', 'title', 'description', 'category', 'location', 'price', 'shipping', 'pickup', 'images', 'user', 'userId', 'createdAt', 'updatedAt')
                 response.body.description.should.equal('New Test Description')
                 done()
             })

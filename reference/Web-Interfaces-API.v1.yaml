@@ -1,0 +1,871 @@
+openapi: 3.0.0
+info:
+  title: Web Interfaces API
+  version: '1.0'
+  contact:
+    name: Henrik Kurkela
+    url: github.com/henrikkurkela
+  description: API for OUAS course Web Interfaces.
+servers:
+  - url: 'http://localhost:3001'
+    description: 'localhost:3001'
+paths:
+  /api/signup:
+    post:
+      summary: ''
+      operationId: post-api-signup
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  email:
+                    type: string
+                  username:
+                    type: string
+                  updatedAt:
+                    type: string
+                  createdAt:
+                    type: string
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: string
+                example: Invalid username.
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: string
+                example: Internal server error.
+      description: Sign up to the service.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: demouser
+                  pattern: '^[a-zA-Z0-9]{1,255}$'
+                  minLength: 1
+                  maxLength: 255
+                email:
+                  type: string
+                  example: demo@user.com
+                  pattern: '^[a-zA-Z0-9.]+@[a-zA-Z]+[.]{1}[a-zA-Z]+$'
+                password:
+                  type: string
+                  example: demopassword
+                  pattern: ^. *
+              required:
+                - username
+                - email
+                - password
+            examples:
+              Signup Example:
+                value:
+                  username: demouser
+                  email: demo@user.com
+                  password: demopassword
+        description: Create user account.
+      parameters:
+        - schema:
+            type: string
+            default: application/json
+          in: header
+          name: Content-Type
+          required: true
+          description: 'The server requires content-type application/json for this request. '
+      tags:
+        - user
+  /api/login:
+    post:
+      summary: ''
+      operationId: post-api-login
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  auth:
+                    type: string
+              examples:
+                Successful login:
+                  value:
+                    auth: string
+        '401':
+          description: Incorrect credentials.
+          content:
+            application/json:
+              schema:
+                type: string
+                example: Incorrect credentials.
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: string
+                example: Internal server error.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - properties:
+                    username:
+                      type: string
+                      example: demouser
+                    password:
+                      type: string
+                      example: demopassword
+                      pattern: ^.*
+                  required:
+                    - username
+                    - password
+                - properties:
+                    email:
+                      type: string
+                      pattern: '^[a-zA-Z0-9.]+@[a-zA-Z]+[.]{1}[a-zA-Z]+$'
+                      example: demo@user.com
+                    password:
+                      type: string
+                      pattern: ^.*
+                      example: demopassword
+                  required:
+                    - email
+                    - password
+              type: object
+            examples:
+              Login with username:
+                value:
+                  username: demouser
+                  password: demopassword
+              Login with email:
+                value:
+                  email: demou@ser.com
+                  password: demopassword
+      description: Log in to the service.
+      tags:
+        - user
+      parameters:
+        - schema:
+            type: string
+            default: application/json
+          in: header
+          name: Content-Type
+          required: true
+          description: 'The server requires content-type application/json for this request. '
+  /api/postings:
+    get:
+      summary: Your GET endpoint
+      tags:
+        - posting
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                description: ''
+                minItems: 1
+                uniqueItems: true
+                items:
+                  type: object
+                  required:
+                    - id
+                    - title
+                    - description
+                    - category
+                    - location
+                    - price
+                    - shipping
+                    - pickup
+                    - createdAt
+                    - updatedAt
+                    - userId
+                    - user
+                    - images
+                  properties:
+                    id:
+                      type: number
+                    title:
+                      type: string
+                      minLength: 1
+                    description:
+                      type: string
+                      minLength: 1
+                    category:
+                      type: string
+                      minLength: 1
+                    location:
+                      type: string
+                      minLength: 1
+                    price:
+                      type: string
+                      minLength: 1
+                    shipping:
+                      type: boolean
+                    pickup:
+                      type: boolean
+                    createdAt:
+                      type: string
+                      minLength: 1
+                    updatedAt:
+                      type: string
+                      minLength: 1
+                    userId:
+                      type: number
+                    user:
+                      type: object
+                      properties:
+                        id:
+                          type: number
+                        username:
+                          type: string
+                          minLength: 1
+                        email:
+                          type: string
+                          minLength: 1
+                        password:
+                          type: string
+                          minLength: 1
+                        createdAt:
+                          type: string
+                          minLength: 1
+                        updatedAt:
+                          type: string
+                          minLength: 1
+                      required:
+                        - id
+                        - username
+                        - email
+                        - password
+                        - createdAt
+                        - updatedAt
+                    images:
+                      type: array
+                      uniqueItems: true
+                      minItems: 1
+                      items:
+                        required:
+                          - id
+                          - image
+                          - createdAt
+                          - updatedAt
+                          - postingId
+                        properties:
+                          id:
+                            type: number
+                          image:
+                            type: string
+                            minLength: 1
+                          createdAt:
+                            type: string
+                            minLength: 1
+                          updatedAt:
+                            type: string
+                            minLength: 1
+                          postingId:
+                            type: number
+      operationId: get-api-posting
+      description: Get all postings.
+    parameters: []
+    post:
+      summary: ''
+      operationId: post-api-postings
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  title:
+                    type: string
+                  description:
+                    type: string
+                  category:
+                    type: string
+                  location:
+                    type: string
+                  price:
+                    type: number
+                  shipping:
+                    type: boolean
+                  pickup:
+                    type: boolean
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+                  userId:
+                    type: string
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      username:
+                        type: string
+                      email:
+                        type: string
+                      password:
+                        type: string
+                      createdAt:
+                        type: string
+                      updatedAt:
+                        type: string
+                  images:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        image:
+                          type: string
+                        createdAt:
+                          type: string
+                        updatedAt:
+                          type: string
+                        postingId:
+                          type: integer
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: Authorization
+          description: User needs a valid token to create a posting.
+          required: true
+        - schema:
+            type: string
+            default: multipart/form-data
+          in: header
+          name: Content-Type
+          required: true
+          description: 'The server requires content-type multipart/form-data for this request. '
+      tags:
+        - posting
+        - user
+      description: Create a new posting.
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                category:
+                  type: string
+                location:
+                  type: string
+                price:
+                  type: number
+                shipping:
+                  type: boolean
+                pickup:
+                  type: boolean
+                images: {}
+              required:
+                - title
+                - description
+                - category
+                - location
+                - price
+        description: ''
+  '/api/postings/{id}':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    patch:
+      summary: ''
+      operationId: patch-api-postings-id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  title:
+                    type: string
+                  description:
+                    type: string
+                  category:
+                    type: string
+                  location:
+                    type: string
+                  price:
+                    type: number
+                  shipping:
+                    type: boolean
+                  pickup:
+                    type: boolean
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+                  userId:
+                    type: string
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      username:
+                        type: string
+                      email:
+                        type: string
+                      password:
+                        type: string
+                      createdAt:
+                        type: string
+                      updatedAt:
+                        type: string
+                  images:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        image:
+                          type: string
+                        createdAt:
+                          type: string
+                        updatedAt:
+                          type: string
+                        postingId:
+                          type: integer
+      tags:
+        - posting
+        - user
+      description: Edit a previously posted posting.
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: Authorization
+          description: User needs a valid token to patch a posting.
+        - schema:
+            type: string
+          in: header
+          name: Content-Type
+          description: 'The server requires content-type multipart/form-data for this request. '
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                category:
+                  type: string
+                location:
+                  type: string
+                price:
+                  type: number
+                shipping:
+                  type: boolean
+                pickup:
+                  type: boolean
+        description: ''
+  '/api/postings/location/{location}':
+    parameters:
+      - schema:
+          type: string
+        name: location
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags:
+        - posting
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                description: ''
+                minItems: 1
+                uniqueItems: true
+                items:
+                  type: object
+                  required:
+                    - id
+                    - title
+                    - description
+                    - category
+                    - location
+                    - price
+                    - shipping
+                    - pickup
+                    - createdAt
+                    - updatedAt
+                    - userId
+                    - user
+                    - images
+                  properties:
+                    id:
+                      type: number
+                    title:
+                      type: string
+                      minLength: 1
+                    description:
+                      type: string
+                      minLength: 1
+                    category:
+                      type: string
+                      minLength: 1
+                    location:
+                      type: string
+                      minLength: 1
+                    price:
+                      type: string
+                      minLength: 1
+                    shipping:
+                      type: boolean
+                    pickup:
+                      type: boolean
+                    createdAt:
+                      type: string
+                      minLength: 1
+                    updatedAt:
+                      type: string
+                      minLength: 1
+                    userId:
+                      type: number
+                    user:
+                      type: object
+                      properties:
+                        id:
+                          type: number
+                        username:
+                          type: string
+                          minLength: 1
+                        email:
+                          type: string
+                          minLength: 1
+                        password:
+                          type: string
+                          minLength: 1
+                        createdAt:
+                          type: string
+                          minLength: 1
+                        updatedAt:
+                          type: string
+                          minLength: 1
+                      required:
+                        - id
+                        - username
+                        - email
+                        - password
+                        - createdAt
+                        - updatedAt
+                    images:
+                      type: array
+                      uniqueItems: true
+                      minItems: 1
+                      items:
+                        required:
+                          - id
+                          - image
+                          - createdAt
+                          - updatedAt
+                          - postingId
+                        properties:
+                          id:
+                            type: number
+                          image:
+                            type: string
+                            minLength: 1
+                          createdAt:
+                            type: string
+                            minLength: 1
+                          updatedAt:
+                            type: string
+                            minLength: 1
+                          postingId:
+                            type: number
+      operationId: get-api-postings-location-location
+      description: Get all postings for a given location.
+  '/api/postings/date/{time}':
+    parameters:
+      - schema:
+          type: string
+        name: time
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                description: ''
+                minItems: 1
+                uniqueItems: true
+                items:
+                  type: object
+                  required:
+                    - id
+                    - title
+                    - description
+                    - category
+                    - location
+                    - price
+                    - shipping
+                    - pickup
+                    - createdAt
+                    - updatedAt
+                    - userId
+                    - user
+                    - images
+                  properties:
+                    id:
+                      type: number
+                    title:
+                      type: string
+                      minLength: 1
+                    description:
+                      type: string
+                      minLength: 1
+                    category:
+                      type: string
+                      minLength: 1
+                    location:
+                      type: string
+                      minLength: 1
+                    price:
+                      type: string
+                      minLength: 1
+                    shipping:
+                      type: boolean
+                    pickup:
+                      type: boolean
+                    createdAt:
+                      type: string
+                      minLength: 1
+                    updatedAt:
+                      type: string
+                      minLength: 1
+                    userId:
+                      type: number
+                    user:
+                      type: object
+                      properties:
+                        id:
+                          type: number
+                        username:
+                          type: string
+                          minLength: 1
+                        email:
+                          type: string
+                          minLength: 1
+                        password:
+                          type: string
+                          minLength: 1
+                        createdAt:
+                          type: string
+                          minLength: 1
+                        updatedAt:
+                          type: string
+                          minLength: 1
+                      required:
+                        - id
+                        - username
+                        - email
+                        - password
+                        - createdAt
+                        - updatedAt
+                    images:
+                      type: array
+                      uniqueItems: true
+                      minItems: 1
+                      items:
+                        required:
+                          - id
+                          - image
+                          - createdAt
+                          - updatedAt
+                          - postingId
+                        properties:
+                          id:
+                            type: number
+                          image:
+                            type: string
+                            minLength: 1
+                          createdAt:
+                            type: string
+                            minLength: 1
+                          updatedAt:
+                            type: string
+                            minLength: 1
+                          postingId:
+                            type: number
+      operationId: get-api-postings-time-time
+      description: Get all postings sorted by posting time in ascending or descending order.
+  '/api/postings/category/{category}':
+    parameters:
+      - schema:
+          type: string
+        name: category
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags:
+        - posting
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                description: ''
+                minItems: 1
+                uniqueItems: true
+                items:
+                  type: object
+                  required:
+                    - id
+                    - title
+                    - description
+                    - category
+                    - location
+                    - price
+                    - shipping
+                    - pickup
+                    - createdAt
+                    - updatedAt
+                    - userId
+                    - user
+                    - images
+                  properties:
+                    id:
+                      type: number
+                    title:
+                      type: string
+                      minLength: 1
+                    description:
+                      type: string
+                      minLength: 1
+                    category:
+                      type: string
+                      minLength: 1
+                    location:
+                      type: string
+                      minLength: 1
+                    price:
+                      type: string
+                      minLength: 1
+                    shipping:
+                      type: boolean
+                    pickup:
+                      type: boolean
+                    createdAt:
+                      type: string
+                      minLength: 1
+                    updatedAt:
+                      type: string
+                      minLength: 1
+                    userId:
+                      type: number
+                    user:
+                      type: object
+                      properties:
+                        id:
+                          type: number
+                        username:
+                          type: string
+                          minLength: 1
+                        email:
+                          type: string
+                          minLength: 1
+                        password:
+                          type: string
+                          minLength: 1
+                        createdAt:
+                          type: string
+                          minLength: 1
+                        updatedAt:
+                          type: string
+                          minLength: 1
+                      required:
+                        - id
+                        - username
+                        - email
+                        - password
+                        - createdAt
+                        - updatedAt
+                    images:
+                      type: array
+                      uniqueItems: true
+                      minItems: 1
+                      items:
+                        required:
+                          - id
+                          - image
+                          - createdAt
+                          - updatedAt
+                          - postingId
+                        properties:
+                          id:
+                            type: number
+                          image:
+                            type: string
+                            minLength: 1
+                          createdAt:
+                            type: string
+                            minLength: 1
+                          updatedAt:
+                            type: string
+                            minLength: 1
+                          postingId:
+                            type: number
+      operationId: get-api-postings-category-category
+      description: Get all postings from a given category.
+components:
+  schemas: {}
+tags:
+  - name: user
+  - name: posting

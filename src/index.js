@@ -25,12 +25,15 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use(express.static('public'))
+
 
 app.use('/api/signup', signup)
 app.use('/api/login', login)
 app.use('/api/postings', postings)
 app.use('/api/uploads', express.static('uploads'))
 
+app.use('*', express.static('public'))
 app.listen(process.env.PORT)
 
 module.exports = app

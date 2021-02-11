@@ -12,7 +12,7 @@ servers:
 paths:
   /api/signup:
     post:
-      summary: ''
+      summary: Sign Up
       operationId: post-api-signup
       responses:
         '201':
@@ -91,7 +91,7 @@ paths:
         - user
   /api/login:
     post:
-      summary: ''
+      summary: Login
       operationId: post-api-login
       responses:
         '200':
@@ -173,7 +173,7 @@ paths:
           description: 'The server requires content-type application/json for this request. '
   /api/postings:
     get:
-      summary: Your GET endpoint
+      summary: Postings
       tags:
         - posting
       responses:
@@ -404,7 +404,7 @@ paths:
         in: path
         required: true
     patch:
-      summary: ''
+      summary: Edit Postings
       operationId: patch-api-postings-id
       responses:
         '200':
@@ -510,7 +510,7 @@ paths:
         in: path
         required: true
     get:
-      summary: Your GET endpoint
+      summary: Get Postings by Location
       tags:
         - posting
       responses:
@@ -631,8 +631,9 @@ paths:
         in: path
         required: true
     get:
-      summary: Your GET endpoint
-      tags: []
+      summary: Get Postings by Date
+      tags:
+        - posting
       responses:
         '200':
           description: OK
@@ -751,7 +752,7 @@ paths:
         in: path
         required: true
     get:
-      summary: Your GET endpoint
+      summary: Get Postings by Category
       tags:
         - posting
       responses:

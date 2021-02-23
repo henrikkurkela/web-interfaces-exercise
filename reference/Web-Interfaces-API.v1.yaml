@@ -188,20 +188,6 @@ paths:
                 uniqueItems: true
                 items:
                   type: object
-                  required:
-                    - id
-                    - title
-                    - description
-                    - category
-                    - location
-                    - price
-                    - shipping
-                    - pickup
-                    - createdAt
-                    - updatedAt
-                    - userId
-                    - user
-                    - images
                   properties:
                     id:
                       type: number
@@ -234,42 +220,22 @@ paths:
                       type: number
                     user:
                       type: object
+                      required:
+                        - username
+                        - email
                       properties:
-                        id:
-                          type: number
                         username:
                           type: string
                           minLength: 1
                         email:
                           type: string
                           minLength: 1
-                        password:
-                          type: string
-                          minLength: 1
-                        createdAt:
-                          type: string
-                          minLength: 1
-                        updatedAt:
-                          type: string
-                          minLength: 1
-                      required:
-                        - id
-                        - username
-                        - email
-                        - password
-                        - createdAt
-                        - updatedAt
                     images:
                       type: array
                       uniqueItems: true
                       minItems: 1
                       items:
-                        required:
-                          - id
-                          - image
-                          - createdAt
-                          - updatedAt
-                          - postingId
+                        type: object
                         properties:
                           id:
                             type: number
@@ -284,6 +250,26 @@ paths:
                             minLength: 1
                           postingId:
                             type: number
+                        required:
+                          - id
+                          - image
+                          - createdAt
+                          - updatedAt
+                          - postingId
+                  required:
+                    - id
+                    - title
+                    - description
+                    - category
+                    - location
+                    - price
+                    - shipping
+                    - pickup
+                    - createdAt
+                    - updatedAt
+                    - userId
+                    - user
+                    - images
       operationId: get-api-posting
       description: Get all postings.
     parameters: []
@@ -323,17 +309,9 @@ paths:
                   user:
                     type: object
                     properties:
-                      id:
-                        type: integer
                       username:
                         type: string
                       email:
-                        type: string
-                      password:
-                        type: string
-                      createdAt:
-                        type: string
-                      updatedAt:
                         type: string
                   images:
                     type: array
@@ -439,17 +417,9 @@ paths:
                   user:
                     type: object
                     properties:
-                      id:
-                        type: integer
                       username:
                         type: string
                       email:
-                        type: string
-                      password:
-                        type: string
-                      createdAt:
-                        type: string
-                      updatedAt:
                         type: string
                   images:
                     type: array
@@ -476,11 +446,13 @@ paths:
           in: header
           name: Authorization
           description: User needs a valid token to patch a posting.
+          required: true
         - schema:
             type: string
           in: header
           name: Content-Type
           description: 'The server requires content-type multipart/form-data for this request. '
+          required: true
       requestBody:
         content:
           multipart/form-data:
@@ -502,6 +474,22 @@ paths:
                 pickup:
                   type: boolean
         description: ''
+    delete:
+      summary: ''
+      operationId: delete-api-postings-id
+      responses:
+        '204':
+          description: No Content
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: Authorization
+          description: User needs a valid token to delete a posting.
+          required: true
+      description: Users may delete their own postings.
+      tags:
+        - posting
   '/api/postings/location/{location}':
     parameters:
       - schema:
@@ -525,20 +513,6 @@ paths:
                 uniqueItems: true
                 items:
                   type: object
-                  required:
-                    - id
-                    - title
-                    - description
-                    - category
-                    - location
-                    - price
-                    - shipping
-                    - pickup
-                    - createdAt
-                    - updatedAt
-                    - userId
-                    - user
-                    - images
                   properties:
                     id:
                       type: number
@@ -571,42 +545,22 @@ paths:
                       type: number
                     user:
                       type: object
+                      required:
+                        - username
+                        - email
                       properties:
-                        id:
-                          type: number
                         username:
                           type: string
                           minLength: 1
                         email:
                           type: string
                           minLength: 1
-                        password:
-                          type: string
-                          minLength: 1
-                        createdAt:
-                          type: string
-                          minLength: 1
-                        updatedAt:
-                          type: string
-                          minLength: 1
-                      required:
-                        - id
-                        - username
-                        - email
-                        - password
-                        - createdAt
-                        - updatedAt
                     images:
                       type: array
                       uniqueItems: true
                       minItems: 1
                       items:
-                        required:
-                          - id
-                          - image
-                          - createdAt
-                          - updatedAt
-                          - postingId
+                        type: object
                         properties:
                           id:
                             type: number
@@ -621,6 +575,26 @@ paths:
                             minLength: 1
                           postingId:
                             type: number
+                        required:
+                          - id
+                          - image
+                          - createdAt
+                          - updatedAt
+                          - postingId
+                  required:
+                    - id
+                    - title
+                    - description
+                    - category
+                    - location
+                    - price
+                    - shipping
+                    - pickup
+                    - createdAt
+                    - updatedAt
+                    - userId
+                    - user
+                    - images
       operationId: get-api-postings-location-location
       description: Get all postings for a given location.
   '/api/postings/date/{time}':
@@ -646,20 +620,6 @@ paths:
                 uniqueItems: true
                 items:
                   type: object
-                  required:
-                    - id
-                    - title
-                    - description
-                    - category
-                    - location
-                    - price
-                    - shipping
-                    - pickup
-                    - createdAt
-                    - updatedAt
-                    - userId
-                    - user
-                    - images
                   properties:
                     id:
                       type: number
@@ -692,42 +652,22 @@ paths:
                       type: number
                     user:
                       type: object
+                      required:
+                        - username
+                        - email
                       properties:
-                        id:
-                          type: number
                         username:
                           type: string
                           minLength: 1
                         email:
                           type: string
                           minLength: 1
-                        password:
-                          type: string
-                          minLength: 1
-                        createdAt:
-                          type: string
-                          minLength: 1
-                        updatedAt:
-                          type: string
-                          minLength: 1
-                      required:
-                        - id
-                        - username
-                        - email
-                        - password
-                        - createdAt
-                        - updatedAt
                     images:
                       type: array
                       uniqueItems: true
                       minItems: 1
                       items:
-                        required:
-                          - id
-                          - image
-                          - createdAt
-                          - updatedAt
-                          - postingId
+                        type: object
                         properties:
                           id:
                             type: number
@@ -742,6 +682,26 @@ paths:
                             minLength: 1
                           postingId:
                             type: number
+                        required:
+                          - id
+                          - image
+                          - createdAt
+                          - updatedAt
+                          - postingId
+                  required:
+                    - id
+                    - title
+                    - description
+                    - category
+                    - location
+                    - price
+                    - shipping
+                    - pickup
+                    - createdAt
+                    - updatedAt
+                    - userId
+                    - user
+                    - images
       operationId: get-api-postings-time-time
       description: Get all postings sorted by posting time in ascending or descending order.
   '/api/postings/category/{category}':
@@ -767,20 +727,6 @@ paths:
                 uniqueItems: true
                 items:
                   type: object
-                  required:
-                    - id
-                    - title
-                    - description
-                    - category
-                    - location
-                    - price
-                    - shipping
-                    - pickup
-                    - createdAt
-                    - updatedAt
-                    - userId
-                    - user
-                    - images
                   properties:
                     id:
                       type: number
@@ -813,42 +759,22 @@ paths:
                       type: number
                     user:
                       type: object
+                      required:
+                        - username
+                        - email
                       properties:
-                        id:
-                          type: number
                         username:
                           type: string
                           minLength: 1
                         email:
                           type: string
                           minLength: 1
-                        password:
-                          type: string
-                          minLength: 1
-                        createdAt:
-                          type: string
-                          minLength: 1
-                        updatedAt:
-                          type: string
-                          minLength: 1
-                      required:
-                        - id
-                        - username
-                        - email
-                        - password
-                        - createdAt
-                        - updatedAt
                     images:
                       type: array
                       uniqueItems: true
                       minItems: 1
                       items:
-                        required:
-                          - id
-                          - image
-                          - createdAt
-                          - updatedAt
-                          - postingId
+                        type: object
                         properties:
                           id:
                             type: number
@@ -863,6 +789,26 @@ paths:
                             minLength: 1
                           postingId:
                             type: number
+                        required:
+                          - id
+                          - image
+                          - createdAt
+                          - updatedAt
+                          - postingId
+                  required:
+                    - id
+                    - title
+                    - description
+                    - category
+                    - location
+                    - price
+                    - shipping
+                    - pickup
+                    - createdAt
+                    - updatedAt
+                    - userId
+                    - user
+                    - images
       operationId: get-api-postings-category-category
       description: Get all postings from a given category.
 components:

@@ -43,11 +43,11 @@ const Posting = sequelize.define('posting',
 class PostingsModel {
 
     get = (posting) => {
-        return Posting.findOne({ where: { ...posting }, include: [User, Image] })
+        return Posting.findOne({ where: { ...posting }, include: [{ model: User, attributes: ['username', 'email'] }, Image] })
     }
 
     getAll = (where = null) => {
-        return Posting.findAll({ where: { ...where }, include: [User, Image] })
+        return Posting.findAll({ where: { ...where }, include: [{ model: User, attributes: ['username', 'email'] }, Image] })
     }
 
     add = (posting) => {
@@ -55,7 +55,7 @@ class PostingsModel {
     }
 
     updateById = (posting) => {
-        return Posting.update({ ...posting }, { where: { id: posting.id }, include: [User, Image] })
+        return Posting.update({ ...posting }, { where: { id: posting.id }, include: [{ model: User, attributes: ['username', 'email'] }, Image] })
     }
 
     delete = (posting) => {

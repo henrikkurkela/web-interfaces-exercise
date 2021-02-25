@@ -58,6 +58,36 @@ postingsRouter.get('/:sortBy/:value', async (request, response) => {
 
 postingsRouter.post('/', auth(true), upload.any(), async (request, response) => {
 
+    if (request.body.shipping) {
+        switch (request.body.shipping) {
+            case 'true':
+            case true:
+            case 1:
+                request.body.shipping = true
+                break
+            default:
+                request.body.shipping = false
+                break
+        }
+    } else {
+        request.body.shipping = false
+    }
+
+    if (request.body.pickup) {
+        switch (request.body.pickup) {
+            case 'true':
+            case true:
+            case 1:
+                request.body.pickup = true
+                break
+            default:
+                request.body.pickup = false
+                break
+        }
+    } else {
+        request.body.pickup = false
+    }
+
     if (!request.body.title) {
         response.status(400).send('No title.')
     } else if (!request.body.description) {
@@ -112,7 +142,53 @@ postingsRouter.patch('/:id', auth(true), upload.any(), async (request, response)
     let posting = await Postings.get({ id })
     let images = await Images.getAll({ postingId: posting.id })
 
-    if (request.auth.id !== posting.userId) {
+    let patchedPosting = { ...posting.get({ plain: true }), ...patch }
+
+    if (patchedPosting.shipping) {
+        switch (patchedPosting.shipping) {
+            case 'true':
+            case true:
+            case 1:
+                patchedPosting.shipping = true
+                break
+            default:
+                patchedPosting.shipping = false
+                break
+        }
+    } else {
+        patchedPosting.shipping = false
+    }
+
+    if (patchedPosting.pickup) {
+        switch (patchedPosting.pickup) {
+            case 'true':
+            case true:
+            case 1:
+                patchedPosting.pickup = true
+                break
+            default:
+                patchedPosting.pickup = false
+                break
+        }
+    } else {
+        patchedPosting.pickup = false
+    }
+
+    if (!patchedPosting.title) {
+        response.status(400).send('No title.')
+    } else if (!patchedPosting.description) {
+        response.status(400).send('No description.')
+    } else if (!patchedPosting.category) {
+        response.status(400).send('No category')
+    } else if (!patchedPosting.location) {
+        response.status(400).send('No location.')
+    } else if (!patchedPosting.price) {
+        response.status(400).send('No price.')
+    } else if (!patchedPosting.shipping && !patchedPosting.pickup) {
+        response.status(400).send('No delivery method.')
+    } else if (request.files.length > 4) {
+        response.status(400).send('Too many images.')
+    } else if (request.auth.id !== posting.userId) {
         response.status(401).send('Unauthorized.')
     } else {
         try {

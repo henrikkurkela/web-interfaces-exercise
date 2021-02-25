@@ -80,8 +80,8 @@ postingsRouter.post('/', auth(true), upload.any(), async (request, response) => 
                 category: request.body.category,
                 location: request.body.location,
                 price: request.body.price,
-                shipping: request.body.shipping ? true : false,
-                pickup: request.body.pickup ? true : false,
+                shipping: request.body.shipping,
+                pickup: request.body.pickup,
                 userId: request.auth.id
             })
 
